@@ -37,53 +37,55 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
       </div>
 
       {/* Header */}
-      <div className="h-16 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur flex items-center justify-between px-6 z-20 shrink-0">
+      <div className="h-14 md:h-16 border-b border-zinc-800 bg-zinc-900/80 backdrop-blur flex items-center justify-between px-4 md:px-6 z-20 shrink-0">
          <div className="flex items-center gap-4">
-             <button onClick={onBack} className="flex items-center gap-2 text-ark-subtext hover:text-white transition-colors text-sm font-mono tracking-wider group">
-                <span className="group-hover:-translate-x-1 transition-transform">&lt;</span> BACK
+             <button onClick={onBack} className="flex items-center gap-2 text-ark-subtext hover:text-white transition-colors text-xs md:text-sm font-mono tracking-wider group">
+                <span className="group-hover:-translate-x-1 transition-transform">&lt;</span> <span className="hidden md:inline">BACK</span>
              </button>
-             <div className="h-6 w-px bg-zinc-700"></div>
-             <h1 className="text-xl font-bold tracking-widest text-white flex items-center gap-2">
-                <FolderOpen className="text-ark-yellow" size={20} />
-                ARCHIVES <span className="text-xs text-zinc-500 font-normal mt-1">INTELLIGENCE DATABASE</span>
+             <div className="h-4 md:h-6 w-px bg-zinc-700"></div>
+             <h1 className="text-lg md:text-xl font-bold tracking-widest text-white flex items-center gap-2">
+                <FolderOpen className="text-ark-yellow" size={18} />
+                ARCHIVES <span className="text-[10px] md:text-xs text-zinc-500 font-normal mt-1 hidden md:inline">INTELLIGENCE DATABASE</span>
              </h1>
          </div>
-         <div className="flex items-center gap-2 bg-black/50 border border-zinc-700 rounded-sm px-3 py-1.5 w-64 focus-within:border-ark-accent transition-colors">
+         <div className="flex items-center gap-2 bg-black/50 border border-zinc-700 rounded-sm px-3 py-1.5 w-32 md:w-64 focus-within:border-ark-accent transition-colors">
              <Search size={14} className="text-zinc-500" />
              <input placeholder="Search records..." className="bg-transparent border-none outline-none text-xs w-full text-white placeholder-zinc-600 font-mono" />
          </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden relative z-10">
-          {/* Sidebar Filters */}
-          <div className="w-64 border-r border-zinc-800 bg-zinc-900/50 flex flex-col p-4 gap-2 overflow-y-auto shrink-0">
-             <div className="text-xs font-bold text-zinc-500 mb-2 px-4 uppercase tracking-wider">Categories</div>
+      <div className="flex flex-col md:flex-row flex-1 overflow-hidden relative z-10">
+          {/* Responsive Sidebar Filters */}
+          <div className="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-800 bg-zinc-900/50 flex flex-row md:flex-col p-2 md:p-4 gap-2 overflow-x-auto md:overflow-y-auto shrink-0 no-scrollbar">
+             <div className="text-[10px] md:text-xs font-bold text-zinc-500 mb-0 md:mb-2 px-2 md:px-4 uppercase tracking-wider flex items-center md:block whitespace-nowrap">
+                <span className="md:hidden mr-2">FILTERS:</span> <span className="hidden md:inline">Categories</span>
+             </div>
              
              <button 
                 onClick={() => setFilter('ALL')}
-                className={`text-left px-4 py-3 text-sm font-mono border-l-2 transition-all flex justify-between items-center group relative overflow-hidden
+                className={`text-left px-3 py-2 md:px-4 md:py-3 text-xs md:text-sm font-mono border-b-2 md:border-b-0 md:border-l-2 transition-all flex justify-between items-center group relative overflow-hidden shrink-0 whitespace-nowrap
                 ${filter === 'ALL' ? 'border-ark-accent bg-zinc-800 text-white' : 'border-transparent text-gray-500 hover:text-gray-300 hover:bg-zinc-800/50'}`}
              >
                 <span className="relative z-10">ALL RECORDS</span>
-                <span className="text-xs opacity-50 relative z-10">{MOCK_MISSIONS.length}</span>
+                <span className="text-[10px] md:text-xs opacity-50 relative z-10 ml-2 md:ml-0">{MOCK_MISSIONS.length}</span>
                 {filter === 'ALL' && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 translate-x-[-100%] animate-shine" />}
              </button>
              
-             <div className="h-px bg-zinc-800 my-2"></div>
+             <div className="hidden md:block h-px bg-zinc-800 my-2"></div>
 
              {Object.values(SubjectType).map(type => (
                  <button 
                     key={type}
                     onClick={() => setFilter(type)}
-                    className={`text-left px-4 py-3 text-sm font-mono border-l-2 transition-all flex justify-between items-center group
+                    className={`text-left px-3 py-2 md:px-4 md:py-3 text-xs md:text-sm font-mono border-b-2 md:border-b-0 md:border-l-2 transition-all flex justify-between items-center group shrink-0 whitespace-nowrap
                     ${filter === type ? `border-${SUBJECT_DATA[type].color.split('-')[1]}-500 bg-zinc-800 text-white` : 'border-transparent text-gray-500 hover:text-gray-300 hover:bg-zinc-800/50'}`}
                  >
                     <span>{SUBJECT_DATA[type].name}</span>
-                    <span className="text-xs opacity-50">{MOCK_MISSIONS.filter(m => m.subject === type).length}</span>
+                    <span className="text-[10px] md:text-xs opacity-50 ml-2 md:ml-0">{MOCK_MISSIONS.filter(m => m.subject === type).length}</span>
                  </button>
              ))}
              
-             <div className="mt-auto p-4 border border-zinc-800 bg-black/40">
+             <div className="hidden md:block mt-auto p-4 border border-zinc-800 bg-black/40">
                 <div className="flex items-center gap-2 text-xs text-zinc-500 mb-2">
                    <Network size={12} /> NETWORK STATUS
                 </div>
@@ -98,7 +100,7 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
           <div className="flex-1 overflow-y-auto custom-scrollbar flex flex-col">
               
               {/* Recently Accessed Section */}
-              <div className="p-8 pb-0">
+              <div className="p-4 md:p-8 pb-0">
                   <h2 className="text-xs font-bold text-ark-yellow uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Clock size={12} /> Recently Decrypted
                   </h2>
@@ -109,7 +111,7 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
                              onClick={() => setViewingFile(mission)}
                              className="flex items-center gap-4 bg-zinc-900/80 border border-zinc-800 p-3 hover:border-gray-500 transition-colors group text-left"
                           >
-                             <div className="w-10 h-10 bg-zinc-800 flex items-center justify-center font-mono text-xs text-zinc-500 group-hover:text-white group-hover:bg-ark-accent/20 transition-colors">
+                             <div className="w-10 h-10 bg-zinc-800 flex items-center justify-center font-mono text-xs text-zinc-500 group-hover:text-white group-hover:bg-ark-accent/20 transition-colors shrink-0">
                                  {mission.code}
                              </div>
                              <div className="flex-1 min-w-0">
@@ -121,30 +123,30 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
                   </div>
               </div>
               
-              <div className="h-px bg-zinc-800 mx-8 my-8"></div>
+              <div className="h-px bg-zinc-800 mx-4 md:mx-8 my-6 md:my-8"></div>
 
               {/* All Files Grid */}
-              <div className="p-8 pt-0">
+              <div className="p-4 md:p-8 pt-0">
                    <h2 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4 flex items-center gap-2">
                       <Database size={12} /> Data Files
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-12">
                       {filteredMissions.map((mission) => (
                           <div 
                             key={mission.id}
                             onClick={() => setViewingFile(mission)}
-                            className="bg-black/40 border border-zinc-800 hover:border-ark-yellow hover:bg-zinc-900 transition-all cursor-pointer p-4 group relative overflow-hidden flex flex-col h-40"
+                            className="bg-black/40 border border-zinc-800 hover:border-ark-yellow hover:bg-zinc-900 transition-all cursor-pointer p-4 group relative overflow-hidden flex flex-col h-32 md:h-40"
                           >
-                             <div className="flex justify-between items-start mb-4">
-                                 <FileText className="text-zinc-600 group-hover:text-ark-yellow transition-colors" size={24} />
-                                 <span className="font-mono text-xs text-zinc-600 border border-zinc-800 px-1 rounded">{mission.code}</span>
+                             <div className="flex justify-between items-start mb-2 md:mb-4">
+                                 <FileText className="text-zinc-600 group-hover:text-ark-yellow transition-colors w-5 h-5 md:w-6 md:h-6" />
+                                 <span className="font-mono text-[10px] md:text-xs text-zinc-600 border border-zinc-800 px-1 rounded">{mission.code}</span>
                              </div>
-                             <h3 className="font-bold text-white mb-1 group-hover:text-ark-accent transition-colors">{mission.title}</h3>
-                             <p className="text-xs text-gray-500 line-clamp-2">{mission.subtitle}</p>
+                             <h3 className="font-bold text-sm md:text-base text-white mb-1 group-hover:text-ark-accent transition-colors truncate">{mission.title}</h3>
+                             <p className="text-[10px] md:text-xs text-gray-500 line-clamp-2">{mission.subtitle}</p>
                              
                              <div className="mt-auto pt-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span className="text-[10px] text-ark-yellow font-mono">ACCESS GRANTED</span>
-                                <ArrowUpRight size={16} className="text-ark-yellow" />
+                                <span className="text-[10px] text-ark-yellow font-mono hidden md:inline">ACCESS GRANTED</span>
+                                <ArrowUpRight size={16} className="text-ark-yellow ml-auto" />
                              </div>
                              
                              {/* Corner Accent */}
@@ -158,15 +160,15 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
 
       {/* File Detail Modal Overlay */}
       {viewingFile && (
-          <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-12 animate-fadeIn">
-              <div className="bg-zinc-900 w-full max-w-4xl h-full md:h-auto md:max-h-[90vh] border border-zinc-700 shadow-2xl flex flex-col relative animate-slideUp">
+          <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-0 md:p-12 animate-fadeIn">
+              <div className="bg-zinc-900 w-full h-full md:h-auto md:max-h-[90vh] md:max-w-4xl border-0 md:border border-zinc-700 shadow-2xl flex flex-col relative animate-slideUp">
                   {/* Modal Header */}
-                  <div className="flex justify-between items-center p-6 border-b border-zinc-800 bg-zinc-950 shrink-0">
-                      <div className="flex items-center gap-4">
-                          <div className="p-2 bg-ark-yellow text-black font-bold font-mono">{viewingFile.code}</div>
-                          <div>
-                              <h2 className="text-xl font-bold text-white leading-none">{viewingFile.title}</h2>
-                              <p className="text-xs text-gray-500 font-mono mt-1">CLASSIFIED INFORMATION // {SUBJECT_DATA[viewingFile.subject].name}</p>
+                  <div className="flex justify-between items-center p-4 md:p-6 border-b border-zinc-800 bg-zinc-950 shrink-0">
+                      <div className="flex items-center gap-3 md:gap-4">
+                          <div className="p-1.5 md:p-2 bg-ark-yellow text-black font-bold font-mono text-sm md:text-base">{viewingFile.code}</div>
+                          <div className="min-w-0">
+                              <h2 className="text-lg md:text-xl font-bold text-white leading-none truncate">{viewingFile.title}</h2>
+                              <p className="text-[10px] md:text-xs text-gray-500 font-mono mt-1 truncate">CLASSIFIED // {SUBJECT_DATA[viewingFile.subject].name}</p>
                           </div>
                       </div>
                       <button onClick={() => setViewingFile(null)} className="p-2 hover:bg-zinc-800 rounded-full text-gray-400 hover:text-white transition-colors">
@@ -175,15 +177,15 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
                   </div>
 
                   {/* Modal Body */}
-                  <div className="flex-1 overflow-y-auto p-8 custom-scrollbar bg-[#181818]">
+                  <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar bg-[#181818]">
                       <div className="prose prose-invert prose-sm max-w-none">
                            {/* Reusing the HTML content structure from constants */}
                            <div dangerouslySetInnerHTML={{ __html: viewingFile.longDescription }} />
                       </div>
                       
-                      <div className="mt-8 pt-8 border-t border-zinc-800 flex justify-between items-center text-xs text-gray-500 font-mono">
-                          <span>LAST UPDATE: {new Date().toLocaleDateString()}</span>
-                          <span className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full"></div> AUTHORIZED BY PRTS</span>
+                      <div className="mt-8 pt-8 border-t border-zinc-800 flex justify-between items-center text-[10px] md:text-xs text-gray-500 font-mono">
+                          <span>UPDATED: {new Date().toLocaleDateString()}</span>
+                          <span className="flex items-center gap-2"><div className="w-2 h-2 bg-green-500 rounded-full"></div> PRTS VERIFIED</span>
                       </div>
                   </div>
               </div>
@@ -204,6 +206,15 @@ const Archives: React.FC<ArchivesProps> = ({ onBack }) => {
         @keyframes slideUp {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
         }
       `}</style>
     </div>

@@ -40,7 +40,7 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
     const randomOffset = ((index * 13) % 5) * 10;
 
     const x = 100 + index * (CARD_WIDTH + GAP_X); // Initial padding left
-    const yBase = 200; // Middle of the container roughly (Moved up from 350)
+    const yBase = 200; // Middle of the container roughly
     const y = yBase + (waveFactor * VERTICAL_AMPLITUDE) + randomOffset;
     
     return { x, y };
@@ -98,9 +98,9 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
   return (
     <div className="flex h-full w-full relative bg-ark-bg font-sans overflow-hidden">
       {/* Left Subject Selector */}
-      <div className="w-20 md:w-80 bg-zinc-950 border-r border-zinc-800 flex flex-col z-20 shadow-[5px_0_30px_rgba(0,0,0,0.5)] shrink-0">
+      <div className="w-16 md:w-80 bg-zinc-950 border-r border-zinc-800 flex flex-col z-20 shadow-[5px_0_30px_rgba(0,0,0,0.5)] shrink-0 transition-all duration-300">
         <div className="p-0 md:p-6 bg-zinc-900 border-b border-zinc-800">
-            <button onClick={onBack} className="w-full text-ark-subtext hover:text-white hover:bg-zinc-800 font-mono flex items-center justify-center md:justify-start gap-2 text-sm tracking-widest py-3 md:py-0 transition-all group">
+            <button onClick={onBack} className="w-full text-ark-subtext hover:text-white hover:bg-zinc-800 font-mono flex items-center justify-center md:justify-start gap-2 text-sm tracking-widest py-4 md:py-0 transition-all group">
                <span className="group-hover:-translate-x-1 transition-transform">&lt;</span> <span className="hidden md:inline">TERMINAL</span>
             </button>
             <div className="hidden md:block mt-6">
@@ -118,17 +118,17 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                 <button
                 key={type}
                 onClick={() => { setSelectedSubject(type); setSelectedMission(null); }}
-                className={`w-full relative h-24 md:h-32 transition-all duration-300 group overflow-hidden border-b border-zinc-800
+                className={`w-full relative h-20 md:h-32 transition-all duration-300 group overflow-hidden border-b border-zinc-800
                     ${isSelected ? 'bg-zinc-800' : 'bg-transparent hover:bg-zinc-900'}`}
                 >
-                    <div className={`absolute -right-4 -bottom-6 text-8xl font-black italic opacity-5 transition-opacity group-hover:opacity-10 ${isSelected ? 'opacity-20 text-white' : 'text-gray-500'}`}>
+                    <div className={`absolute -right-4 -bottom-6 text-8xl font-black italic opacity-5 transition-opacity group-hover:opacity-10 ${isSelected ? 'opacity-20 text-white' : 'text-gray-500'} hidden md:block`}>
                         0{index + 1}
                     </div>
 
-                    <div className="absolute inset-0 flex items-center px-4 md:px-8">
-                        <div className={`w-12 h-12 flex items-center justify-center border-2 rotate-45 transition-all duration-500 mr-6
+                    <div className="absolute inset-0 flex items-center justify-center md:justify-start px-0 md:px-8">
+                        <div className={`w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 rotate-45 transition-all duration-500 md:mr-6
                             ${isSelected ? `border-${info.color.split('-')[1]}-500 bg-${info.color.split('-')[1]}-500/20 shadow-[0_0_15px_currentColor]` : 'border-zinc-700 text-zinc-600 group-hover:border-zinc-500'}`}>
-                             <Icon className={`w-6 h-6 -rotate-45 ${isSelected ? 'text-white' : 'text-zinc-600 group-hover:text-zinc-400'}`} />
+                             <Icon className={`w-5 h-5 md:w-6 md:h-6 -rotate-45 ${isSelected ? 'text-white' : 'text-zinc-600 group-hover:text-zinc-400'}`} />
                         </div>
                         
                         <div className="hidden md:block text-left z-10">
@@ -147,17 +147,17 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
       {/* Main Stage Map / List Area */}
       <div className="flex-1 relative bg-[#0a0a0a] flex flex-col min-w-0">
           {/* Header */}
-          <div className="h-32 w-full flex items-end justify-between p-8 md:p-12 relative overflow-hidden select-none shrink-0 z-10 pointer-events-none">
+          <div className="h-24 md:h-32 w-full flex items-end justify-between p-6 md:p-12 relative overflow-hidden select-none shrink-0 z-10 pointer-events-none">
              <div className="absolute top-0 right-0 p-4 opacity-10">
-                 <h2 className="text-9xl font-black text-white italic tracking-tighter">{SUBJECT_DATA[selectedSubject].code}</h2>
+                 <h2 className="text-6xl md:text-9xl font-black text-white italic tracking-tighter">{SUBJECT_DATA[selectedSubject].code}</h2>
              </div>
              <div className="z-10 relative pointer-events-auto">
                  <div className="flex items-center gap-4 mb-2">
-                     <span className={`px-2 py-0.5 text-xs font-bold text-black bg-white`}>CURRENT EPISODE</span>
-                     <span className="h-px w-20 bg-zinc-700"></span>
+                     <span className={`px-2 py-0.5 text-[10px] md:text-xs font-bold text-black bg-white`}>CURRENT EPISODE</span>
+                     <span className="h-px w-10 md:w-20 bg-zinc-700"></span>
                  </div>
-                 <h2 className="text-4xl md:text-5xl font-black text-white italic drop-shadow-lg">{SUBJECT_DATA[selectedSubject].name}</h2>
-                 <p className="text-ark-subtext mt-2 font-mono text-sm tracking-wider">{SUBJECT_DATA[selectedSubject].description}</p>
+                 <h2 className="text-3xl md:text-5xl font-black text-white italic drop-shadow-lg">{SUBJECT_DATA[selectedSubject].name}</h2>
+                 <p className="text-ark-subtext mt-2 font-mono text-xs md:text-sm tracking-wider">{SUBJECT_DATA[selectedSubject].description}</p>
              </div>
           </div>
 
@@ -307,21 +307,21 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
             {selectedMission && (
                 <>
                     {/* Panel Header */}
-                    <div className="h-48 bg-zinc-900 relative p-8 flex flex-col justify-end overflow-hidden shrink-0">
-                        <div className="absolute top-0 right-0 text-[10rem] font-black italic text-white/5 leading-none -mr-10 -mt-10 select-none">
+                    <div className="h-40 md:h-48 bg-zinc-900 relative p-6 md:p-8 flex flex-col justify-end overflow-hidden shrink-0">
+                        <div className="absolute top-0 right-0 text-8xl md:text-[10rem] font-black italic text-white/5 leading-none -mr-4 md:-mr-10 -mt-4 md:-mt-10 select-none">
                             {selectedMission.code}
                         </div>
-                        <button onClick={() => setSelectedMission(null)} className="absolute top-6 right-6 text-zinc-500 hover:text-white transition-colors">
+                        <button onClick={() => setSelectedMission(null)} className="absolute top-4 right-4 md:top-6 md:right-6 text-zinc-500 hover:text-white transition-colors">
                             <X size={24} />
                         </button>
                         
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-2">
-                                <span className="px-2 py-0.5 bg-ark-yellow text-black text-xs font-bold tracking-wider">OPERATION</span>
-                                <span className="text-zinc-500 font-mono text-xs">DIFFICULTY: {selectedMission.difficulty}/5</span>
+                                <span className="px-2 py-0.5 bg-ark-yellow text-black text-[10px] md:text-xs font-bold tracking-wider">OPERATION</span>
+                                <span className="text-zinc-500 font-mono text-[10px] md:text-xs">DIFFICULTY: {selectedMission.difficulty}/5</span>
                             </div>
-                            <h2 className="text-3xl font-bold text-white mb-1">{selectedMission.title}</h2>
-                            <p className="text-ark-subtext text-sm">{selectedMission.subtitle}</p>
+                            <h2 className="text-2xl md:text-3xl font-bold text-white mb-1">{selectedMission.title}</h2>
+                            <p className="text-ark-subtext text-xs md:text-sm">{selectedMission.subtitle}</p>
                         </div>
                         
                         {/* Striped Bar */}
@@ -329,12 +329,12 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                     </div>
 
                     {/* Briefing Content */}
-                    <div className="flex-1 p-8 overflow-y-auto">
+                    <div className="flex-1 p-6 md:p-8 overflow-y-auto">
                         <div className="mb-6">
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                 <Info size={12} /> Mission Briefing
                             </h3>
-                            <div className="bg-black/30 border border-zinc-800 p-4 text-sm text-gray-300 leading-relaxed font-mono">
+                            <div className="bg-black/30 border border-zinc-800 p-4 text-xs md:text-sm text-gray-300 leading-relaxed font-mono">
                                 {selectedMission.description}
                             </div>
                         </div>
@@ -344,9 +344,9 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                              <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-3">Likely Drops</h3>
                              <div className="flex gap-4">
                                 {selectedMission.rewards.map((reward, i) => (
-                                    <div key={i} className="w-16 h-16 bg-zinc-800 border border-zinc-700 flex flex-col items-center justify-center relative group cursor-pointer hover:border-gray-500 hover:bg-zinc-700 transition-all">
-                                        <div className={`w-8 h-8 rounded-full mb-1 shadow-lg ${i === 0 ? 'bg-yellow-600 shadow-yellow-500/20' : 'bg-blue-600 shadow-blue-500/20'}`}></div>
-                                        <span className="text-[9px] text-gray-400 text-center leading-none px-1">{reward}</span>
+                                    <div key={i} className="w-14 h-14 md:w-16 md:h-16 bg-zinc-800 border border-zinc-700 flex flex-col items-center justify-center relative group cursor-pointer hover:border-gray-500 hover:bg-zinc-700 transition-all">
+                                        <div className={`w-6 h-6 md:w-8 md:h-8 rounded-full mb-1 shadow-lg ${i === 0 ? 'bg-yellow-600 shadow-yellow-500/20' : 'bg-blue-600 shadow-blue-500/20'}`}></div>
+                                        <span className="text-[8px] md:text-[9px] text-gray-400 text-center leading-none px-1">{reward}</span>
                                         {/* Rarity Stripe */}
                                         <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${i===0?'bg-yellow-500':'bg-blue-400'}`}></div>
                                     </div>
@@ -367,10 +367,10 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                     </div>
 
                     {/* Footer Actions */}
-                    <div className="p-8 border-t border-zinc-800 bg-zinc-900/50 shrink-0">
+                    <div className="p-6 md:p-8 border-t border-zinc-800 bg-zinc-900/50 shrink-0">
                         <button 
                             onClick={() => onStartMission(selectedMission)}
-                            className="w-full h-16 bg-ark-accent hover:bg-white text-black font-black text-xl italic tracking-widest flex items-center justify-center gap-4 transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] relative overflow-hidden group"
+                            className="w-full h-14 md:h-16 bg-ark-accent hover:bg-white text-black font-black text-lg md:text-xl italic tracking-widest flex items-center justify-center gap-4 transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] relative overflow-hidden group"
                         >
                             <span className="relative z-10 flex items-center gap-3">
                                 START OPERATION <Play className="fill-current" />
