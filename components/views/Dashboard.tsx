@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Activity, Shield, Battery, Database, Cpu } from 'lucide-react';
+import { Atom, FlaskConical, BrainCircuit, Shield, Database } from 'lucide-react';
 import { ViewState, UserStats } from '../../types';
 
 interface DashboardProps {
@@ -54,15 +55,15 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onChangeView }) => {
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 pointer-events-none opacity-20 bg-[length:100%_2px,3px_100%]"></div>
                 
                 <div className="z-10 text-left relative">
-                  <div className="text-6xl font-black italic tracking-tighter text-white/10 absolute -top-8 -left-4 select-none">COMBAT</div>
+                  <div className="text-6xl font-black italic tracking-tighter text-white/10 absolute -top-8 -left-4 select-none">PHYSICS</div>
                   <h2 className="text-4xl font-black italic tracking-widest text-white group-hover:text-ark-accent transition-colors drop-shadow-md">
-                    作战 <span className="text-xl not-italic font-normal opacity-70">COMBAT</span>
+                    作战 <span className="text-xl not-italic font-normal opacity-70">OPERATIONS</span>
                   </h2>
-                  <p className="text-blue-200 text-xs font-mono mt-2 tracking-widest">当前行动：CA-1 导数与DPS分析</p>
+                  <p className="text-blue-200 text-xs font-mono mt-2 tracking-widest">当前行动：CA-5 泰勒展开与源石技艺</p>
                 </div>
                 
                 <div className="relative z-10">
-                    <Activity className="w-24 h-24 text-blue-500/20 group-hover:text-ark-accent/60 transition-all rotate-12" />
+                    <Atom className="w-24 h-24 text-blue-500/20 group-hover:text-ark-accent/60 transition-all rotate-12" />
                 </div>
                 
                 <div className="absolute bottom-0 right-0 w-16 h-16 border-b-4 border-r-4 border-ark-accent opacity-50 group-hover:opacity-100 transition-opacity"></div>
@@ -73,24 +74,24 @@ const Dashboard: React.FC<DashboardProps> = ({ stats, onChangeView }) => {
                onClick={() => onChangeView(ViewState.ARCHIVES)}
                className="bg-zinc-800/60 border border-zinc-600 hover:bg-zinc-700/80 hover:border-gray-400 p-6 cursor-pointer flex flex-col justify-between group transition-all h-32 relative overflow-hidden"
              >
-                <Database className="w-8 h-8 text-gray-500 group-hover:text-ark-yellow mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <FlaskConical className="w-8 h-8 text-gray-500 group-hover:text-ark-yellow mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <div className="z-10">
-                  <h3 className="text-xl font-bold tracking-wider">情报 <span className="text-xs text-gray-500 font-mono">ARCHIVES</span></h3>
-                  <p className="text-xs text-gray-400 mt-1">数学概念资料库</p>
+                  <h3 className="text-xl font-bold tracking-wider">档案 <span className="text-xs text-gray-500 font-mono">ARCHIVES</span></h3>
+                  <p className="text-xs text-gray-400 mt-1">综合生物数据库</p>
                 </div>
-                <div className="absolute -right-4 -bottom-4 text-8xl font-black text-white/5 rotate-[-15deg]">LIB</div>
+                <div className="absolute -right-4 -bottom-4 text-8xl font-black text-white/5 rotate-[-15deg]">BIO</div>
              </div>
 
              <div 
                onClick={() => onChangeView(ViewState.PRTS)}
                className="bg-zinc-800/60 border border-zinc-600 hover:bg-zinc-700/80 hover:border-gray-400 p-6 cursor-pointer flex flex-col justify-between group transition-all h-32 relative overflow-hidden"
              >
-                <Cpu className="w-8 h-8 text-gray-500 group-hover:text-green-400 mb-4 group-hover:scale-110 transition-transform duration-300" />
+                <BrainCircuit className="w-8 h-8 text-gray-500 group-hover:text-green-400 mb-4 group-hover:scale-110 transition-transform duration-300" />
                 <div className="z-10">
-                  <h3 className="text-xl font-bold tracking-wider">终端 <span className="text-xs text-gray-500 font-mono">PRTS</span></h3>
-                  <p className="text-xs text-gray-400 mt-1">AI 代理指挥</p>
+                  <h3 className="text-xl font-bold tracking-wider">神经网络 <span className="text-xs text-gray-500 font-mono">PRTS</span></h3>
+                  <p className="text-xs text-gray-400 mt-1">AI 神经连接</p>
                 </div>
-                <div className="absolute -right-4 -bottom-4 text-8xl font-black text-white/5 rotate-[-15deg]">AI</div>
+                <div className="absolute -right-4 -bottom-4 text-8xl font-black text-white/5 rotate-[-15deg]">NET</div>
              </div>
 
              <div className="col-span-2 bg-zinc-900/90 border-t-2 border-zinc-700 p-4 flex items-center justify-between shadow-inner">

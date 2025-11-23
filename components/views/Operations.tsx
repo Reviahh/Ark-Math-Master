@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { SubjectType, OperationMission } from '../../types';
 import { SUBJECT_DATA, MOCK_MISSIONS } from '../../constants';
-import { Lock, Play, X, Info, ChevronRight, Activity } from 'lucide-react';
+import { Lock, Play, X, Info, BrainCircuit } from 'lucide-react';
 
 interface OperationsProps {
   onBack: () => void;
@@ -25,19 +25,23 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
   // Constants for Neural Map Layout
   const CARD_WIDTH = 250; 
   const CARD_HEIGHT = 150;
-  const GAP_X = 100; // Horizontal space between cards
-  const VERTICAL_AMPLITUDE = 120; // How much they go up and down
+  const GAP_X = 140; // Increased horizontal space
+  const VERTICAL_AMPLITUDE = 160; // How much they go up and down
   
   // Calculate positions for each mission to create the "Network/Neural" look
   const getMissionPosition = (index: number) => {
-    // Generate a pseudo-random looking but deterministic wave pattern
+    // Generate a more organic, neuron-like path
     // [0, -1, 1, -0.5, 0.5 ...] pattern variation
-    const wavePatterns = [0, -1, 0.8, -0.6, 1, -0.8, 0.5];
+    // Using sine + index to create a flow
+    const wavePatterns = [0, -0.8, 0.6, -0.9, 0.2, -0.5, 0.9];
     const waveFactor = wavePatterns[index % wavePatterns.length];
     
-    const x = 80 + index * (CARD_WIDTH + GAP_X); // Initial padding left
-    const yBase = 250; // Middle of the container roughly
-    const y = yBase + (waveFactor * VERTICAL_AMPLITUDE);
+    // Add some random-looking but deterministic offset based on index
+    const randomOffset = ((index * 13) % 5) * 10;
+
+    const x = 100 + index * (CARD_WIDTH + GAP_X); // Initial padding left
+    const yBase = 200; // Middle of the container roughly (Moved up from 350)
+    const y = yBase + (waveFactor * VERTICAL_AMPLITUDE) + randomOffset;
     
     return { x, y };
   };
@@ -88,7 +92,7 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
   // Calculate total width needed for the scroll container
   const totalWidth = Math.max(
       window.innerWidth, 
-      missions.length * (CARD_WIDTH + GAP_X) + 400
+      missions.length * (CARD_WIDTH + GAP_X) + 600
   );
 
   return (
@@ -141,7 +145,7 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
       </div>
 
       {/* Main Stage Map / List Area */}
-      <div className="flex-1 relative bg-[#121212] flex flex-col min-w-0">
+      <div className="flex-1 relative bg-[#0a0a0a] flex flex-col min-w-0">
           {/* Header */}
           <div className="h-32 w-full flex items-end justify-between p-8 md:p-12 relative overflow-hidden select-none shrink-0 z-10 pointer-events-none">
              <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -168,16 +172,21 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
           >
                <div style={{ width: `${totalWidth}px`, height: '100%' }} className="relative">
                    
-                   {/* Background Grid */}
-                   <div className="absolute inset-0 opacity-5" 
-                        style={{
-                            backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
-                            backgroundSize: '40px 40px'
-                        }}>
+                   {/* Background Elements - Organic Neural Web */}
+                   <div className="absolute inset-0 pointer-events-none opacity-20">
+                      <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] bg-blue-900/10 rounded-full blur-[100px]"></div>
+                      <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] bg-purple-900/10 rounded-full blur-[80px]"></div>
                    </div>
 
                    {/* SVG Connection Layer */}
                    <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                        <defs>
+                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stopColor="#333" stopOpacity="0.2" />
+                                <stop offset="50%" stopColor="#FCD321" stopOpacity="0.5" />
+                                <stop offset="100%" stopColor="#333" stopOpacity="0.2" />
+                            </linearGradient>
+                        </defs>
                         {missions.map((mission, idx) => {
                             if (idx === missions.length - 1) return null;
                             const start = getMissionPosition(idx);
@@ -189,28 +198,39 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                             const endX = end.x + CARD_WIDTH / 2;
                             const endY = end.y + CARD_HEIGHT / 2;
 
+                            // Bezier Curve Control Points for organic look
+                            const cp1X = startX + (endX - startX) / 2;
+                            const cp1Y = startY;
+                            const cp2X = startX + (endX - startX) / 2;
+                            const cp2Y = endY;
+
                             return (
                                 <g key={`line-${mission.id}`}>
-                                    {/* Connection Line */}
-                                    <line 
-                                        x1={startX} y1={startY} 
-                                        x2={endX} y2={endY} 
-                                        stroke="#333" 
+                                    {/* Organic Curved Line */}
+                                    <path 
+                                        d={`M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`}
+                                        stroke="url(#lineGradient)" 
                                         strokeWidth="2" 
-                                        strokeDasharray="5,5"
+                                        fill="none"
+                                        strokeDasharray="4,4"
                                     />
-                                    {/* Animated Blip on line */}
-                                    <circle r="3" fill="#FCD321">
+                                    {/* Animated Nerve Impulse */}
+                                    <circle r="4" fill="#FCD321" filter="drop-shadow(0 0 5px #FCD321)">
                                         <animateMotion 
-                                            dur="3s" 
+                                            dur="4s" 
                                             repeatCount="indefinite"
-                                            path={`M${startX},${startY} L${endX},${endY}`}
+                                            path={`M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`}
+                                            calcMode="spline"
+                                            keySplines="0.4 0 0.2 1"
                                         />
                                     </circle>
                                 </g>
                             );
                         })}
                    </svg>
+                   
+                   {/* Floating Background Brain Icon for Atmosphere */}
+                   <BrainCircuit className="absolute top-[20%] left-[5%] w-96 h-96 text-zinc-900/50 pointer-events-none -z-10 animate-pulse" style={{animationDuration: '10s'}}/>
 
                    {/* Node Render Loop */}
                    {missions.map((mission, idx) => {
@@ -260,21 +280,21 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                                     </div>
 
                                     {/* Connecting Dot Node (Visual anchor for lines) */}
-                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-zinc-900 border border-zinc-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                 </button>
                                 
                                 {/* Node Index Number floating near it */}
-                                <div className="absolute -top-6 left-0 font-mono text-xs text-zinc-600">
-                                    NODE_0{idx + 1}
+                                <div className="absolute -top-6 left-0 font-mono text-[10px] text-zinc-600 tracking-widest opacity-50">
+                                    SYNAPSE_NODE_0{idx + 1}
                                 </div>
                            </div>
                        );
                    })}
                    
                    {/* Start Marker */}
-                   <div className="absolute top-[250px] left-8 flex items-center gap-2">
+                   <div className="absolute top-[200px] left-12 flex items-center gap-2">
                         <div className="w-3 h-3 bg-ark-accent rounded-full animate-pulse"></div>
-                        <span className="text-xs font-mono text-ark-accent tracking-widest">START</span>
+                        <span className="text-xs font-mono text-ark-accent tracking-widest">ORIGIN</span>
                    </div>
                </div>
           </div>
@@ -298,7 +318,7 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                         <div className="relative z-10">
                             <div className="flex items-center gap-3 mb-2">
                                 <span className="px-2 py-0.5 bg-ark-yellow text-black text-xs font-bold tracking-wider">OPERATION</span>
-                                <span className="text-zinc-500 font-mono text-xs">DIFFICULTY: {selectedMission.difficulty}/3</span>
+                                <span className="text-zinc-500 font-mono text-xs">DIFFICULTY: {selectedMission.difficulty}/5</span>
                             </div>
                             <h2 className="text-3xl font-bold text-white mb-1">{selectedMission.title}</h2>
                             <p className="text-ark-subtext text-sm">{selectedMission.subtitle}</p>
