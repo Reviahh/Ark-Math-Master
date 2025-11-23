@@ -179,7 +179,7 @@ export const MOCK_MISSIONS: OperationMission[] = [
     `
   },
 
-  // --- CALCULUS (Based on provided image text) ---
+  // --- CALCULUS (Renumbered 1, 2, 3) ---
   {
     id: 'ca-1',
     code: 'CA-1',
@@ -245,8 +245,8 @@ export const MOCK_MISSIONS: OperationMission[] = [
     `
   },
   {
-    id: 'ca-5',
-    code: 'CA-5',
+    id: 'ca-3',
+    code: 'CA-3',
     title: '积分',
     subtitle: '整个技能期间打了多少伤害 (总输出)',
     subject: SubjectType.CALCULUS,
@@ -256,7 +256,7 @@ export const MOCK_MISSIONS: OperationMission[] = [
     rewards: ['高级作战记录', '聚合剂'],
     description: 'DPS曲线下的面积。把每一秒的伤害全部加起来。',
     longDescription: `
-      <h3 class="text-xl font-bold text-white mb-4">⑤ 积分 = 整个技能期间打了多少伤害 (总输出)</h3>
+      <h3 class="text-xl font-bold text-white mb-4">③ 积分 = 整个技能期间打了多少伤害 (总输出)</h3>
       <p class="mb-4">积分就是：<strong>把每一秒的伤害全部加起来 = 总伤。</strong></p>
       <p class="mb-6">这不就和我们在明日方舟里算总伤一模一样吗？</p>
 
@@ -276,7 +276,7 @@ export const MOCK_MISSIONS: OperationMission[] = [
     `
   },
 
-  // --- PROBABILITY (Based on provided image text) ---
+  // --- PROBABILITY (Renumbered 1, 2, 3) ---
   {
     id: 'pr-1',
     code: 'PR-1',
@@ -300,8 +300,8 @@ export const MOCK_MISSIONS: OperationMission[] = [
     `
   },
   {
-    id: 'pr-3',
-    code: 'PR-3',
+    id: 'pr-2',
+    code: 'PR-2',
     title: '独立事件',
     subtitle: '抽卡不是“玄学连携技”',
     subject: SubjectType.PROBABILITY,
@@ -311,7 +311,7 @@ export const MOCK_MISSIONS: OperationMission[] = [
     rewards: ['中级作战记录', '聚酸酯'],
     description: '“我已经歪了三次，下一个一定是对应的吗？” 概率论告诉你：NO。',
     longDescription: `
-      <h3 class="text-xl font-bold text-white mb-4">③ 独立事件 = 抽卡不是“玄学连携技”</h3>
+      <h3 class="text-xl font-bold text-white mb-4">② 独立事件 = 抽卡不是“玄学连携技”</h3>
       <p class="mb-4">玩家经常问：</p>
       <blockquote class="bg-zinc-900 p-4 mb-6 italic text-white">
         “我已经歪了三次，下一个一定是对应的吗？”
@@ -326,8 +326,8 @@ export const MOCK_MISSIONS: OperationMission[] = [
     `
   },
   {
-    id: 'pr-7',
-    code: 'PR-7',
+    id: 'pr-3',
+    code: 'PR-3',
     title: '期望',
     subtitle: '平均能赚多少？(最重要)',
     subject: SubjectType.PROBABILITY,
@@ -337,7 +337,7 @@ export const MOCK_MISSIONS: OperationMission[] = [
     rewards: ['高级作战记录', 'D32钢'],
     description: '你刚赤金，有60%概率出紫，40%出蓝。你的期望收益是多少？',
     longDescription: `
-      <h3 class="text-xl font-bold text-white mb-4">⑦ 期望 (数学期望) = 平均能赚多少？(最重要)</h3>
+      <h3 class="text-xl font-bold text-white mb-4">③ 期望 (数学期望) = 平均能赚多少？(最重要)</h3>
       <p class="mb-4">期望 = 重复很多次后，平均能拿到多少收益。</p>
       <h4 class="font-bold text-white mb-2">举例：</h4>
       <p class="mb-4">你刷赤金，有 60% 概率出紫 (价值 700)，40% 出蓝 (价值 200)。</p>

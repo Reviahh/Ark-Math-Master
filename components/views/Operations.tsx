@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { SubjectType, OperationMission } from '../../types';
 import { SUBJECT_DATA, MOCK_MISSIONS } from '../../constants';
-import { Lock, Play, X, Info, ChevronRight } from 'lucide-react';
+import { Lock, Play, X, Info, ChevronRight, Activity } from 'lucide-react';
 
 interface OperationsProps {
   onBack: () => void;
@@ -22,10 +22,30 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
 
   const missions = MOCK_MISSIONS.filter(m => m.subject === selectedSubject);
 
-  // Reset scroll when subject changes - using 'auto' for instant jump to avoid disorientation
+  // Constants for Neural Map Layout
+  const CARD_WIDTH = 250; 
+  const CARD_HEIGHT = 150;
+  const GAP_X = 100; // Horizontal space between cards
+  const VERTICAL_AMPLITUDE = 120; // How much they go up and down
+  
+  // Calculate positions for each mission to create the "Network/Neural" look
+  const getMissionPosition = (index: number) => {
+    // Generate a pseudo-random looking but deterministic wave pattern
+    // [0, -1, 1, -0.5, 0.5 ...] pattern variation
+    const wavePatterns = [0, -1, 0.8, -0.6, 1, -0.8, 0.5];
+    const waveFactor = wavePatterns[index % wavePatterns.length];
+    
+    const x = 80 + index * (CARD_WIDTH + GAP_X); // Initial padding left
+    const yBase = 250; // Middle of the container roughly
+    const y = yBase + (waveFactor * VERTICAL_AMPLITUDE);
+    
+    return { x, y };
+  };
+
+  // Reset scroll when subject changes
   useEffect(() => {
     if (scrollRef.current) {
-        scrollRef.current.scrollTo({ left: 0, behavior: 'auto' });
+        scrollRef.current.scrollTo({ left: 0, behavior: 'instant' });
     }
   }, [selectedSubject]);
 
@@ -40,12 +60,10 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
 
   const handleMouseLeave = () => {
     setIsDown(false);
-    // Don't reset isDragging immediately here to prevent accidental clicks on exit
   };
 
   const handleMouseUp = () => {
     setIsDown(false);
-    // Slight delay to reset dragging state so click handlers can check it
     setTimeout(() => setIsDragging(false), 50);
   };
 
@@ -53,9 +71,8 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
     if (!isDown || !scrollRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5; // Drag multiplier
+    const walk = (x - startX) * 1.5; 
     
-    // If moved significantly (more than 5px), consider it a drag to prevent accidental clicks
     if (Math.abs(walk) > 5) {
         setIsDragging(true);
     }
@@ -64,15 +81,19 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
   };
 
   const handleMissionClick = (mission: OperationMission) => {
-      // Prevent click if user was just dragging
       if (isDragging) return;
       setSelectedMission(mission);
   };
 
+  // Calculate total width needed for the scroll container
+  const totalWidth = Math.max(
+      window.innerWidth, 
+      missions.length * (CARD_WIDTH + GAP_X) + 400
+  );
+
   return (
     <div className="flex h-full w-full relative bg-ark-bg font-sans overflow-hidden">
-      {/* Left Subject Selector (Episode List) */}
-      {/* Added shrink-0 to prevent sidebar from squishing when main content is wide */}
+      {/* Left Subject Selector */}
       <div className="w-20 md:w-80 bg-zinc-950 border-r border-zinc-800 flex flex-col z-20 shadow-[5px_0_30px_rgba(0,0,0,0.5)] shrink-0">
         <div className="p-0 md:p-6 bg-zinc-900 border-b border-zinc-800">
             <button onClick={onBack} className="w-full text-ark-subtext hover:text-white hover:bg-zinc-800 font-mono flex items-center justify-center md:justify-start gap-2 text-sm tracking-widest py-3 md:py-0 transition-all group">
@@ -80,7 +101,7 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
             </button>
             <div className="hidden md:block mt-6">
                 <h1 className="text-4xl font-black italic text-white tracking-tighter">EPISODES</h1>
-                <p className="text-xs text-ark-subtext tracking-[0.3em] mt-1">COURSE SELECTION</p>
+                <p className="text-xs text-ark-subtext tracking-[0.3em] mt-1">NEURAL SELECTION</p>
             </div>
         </div>
         
@@ -96,7 +117,6 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                 className={`w-full relative h-24 md:h-32 transition-all duration-300 group overflow-hidden border-b border-zinc-800
                     ${isSelected ? 'bg-zinc-800' : 'bg-transparent hover:bg-zinc-900'}`}
                 >
-                    {/* Background Number */}
                     <div className={`absolute -right-4 -bottom-6 text-8xl font-black italic opacity-5 transition-opacity group-hover:opacity-10 ${isSelected ? 'opacity-20 text-white' : 'text-gray-500'}`}>
                         0{index + 1}
                     </div>
@@ -113,8 +133,6 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
                             <div className="text-[10px] text-zinc-500 truncate w-40">{info.description.split('//')[0]}</div>
                         </div>
                     </div>
-                    
-                    {/* Active Indicator Bar */}
                     {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-ark-yellow box-shadow-[0_0_10px_#FCD321]"></div>}
                 </button>
             );
@@ -125,11 +143,11 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
       {/* Main Stage Map / List Area */}
       <div className="flex-1 relative bg-[#121212] flex flex-col min-w-0">
           {/* Header */}
-          <div className="h-32 w-full flex items-end justify-between p-8 md:p-12 relative overflow-hidden select-none shrink-0">
-             <div className="absolute top-0 right-0 p-4 opacity-20">
+          <div className="h-32 w-full flex items-end justify-between p-8 md:p-12 relative overflow-hidden select-none shrink-0 z-10 pointer-events-none">
+             <div className="absolute top-0 right-0 p-4 opacity-10">
                  <h2 className="text-9xl font-black text-white italic tracking-tighter">{SUBJECT_DATA[selectedSubject].code}</h2>
              </div>
-             <div className="z-10 relative">
+             <div className="z-10 relative pointer-events-auto">
                  <div className="flex items-center gap-4 mb-2">
                      <span className={`px-2 py-0.5 text-xs font-bold text-black bg-white`}>CURRENT EPISODE</span>
                      <span className="h-px w-20 bg-zinc-700"></span>
@@ -139,65 +157,125 @@ const Operations: React.FC<OperationsProps> = ({ onBack, onStartMission }) => {
              </div>
           </div>
 
-          {/* Stage Nodes (Visual List) */}
+          {/* Neural Network Map */}
           <div 
              ref={scrollRef}
-             className="flex-1 overflow-x-auto overflow-y-hidden whitespace-nowrap p-8 md:p-12 flex items-center gap-8 md:gap-16 custom-scrollbar cursor-grab active:cursor-grabbing select-none"
+             className="flex-1 overflow-x-auto overflow-y-hidden relative custom-scrollbar cursor-grab active:cursor-grabbing select-none"
              onMouseDown={handleMouseDown}
              onMouseLeave={handleMouseLeave}
              onMouseUp={handleMouseUp}
              onMouseMove={handleMouseMove}
           >
-               {/* Start Line */}
-               <div className="h-0.5 bg-zinc-800 w-12 min-w-[3rem] relative">
-                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-1 bg-zinc-600 rounded-full"></div>
-               </div>
-
-               {missions.map((mission, idx) => (
-                   <div key={mission.id} className="relative inline-block align-middle group">
-                       {/* Connection Line */}
-                       {idx < missions.length - 1 && (
-                           <div className="absolute left-full top-1/2 w-8 md:w-16 h-0.5 bg-zinc-800 -z-10 flex items-center justify-center">
-                              {/* Small dot in middle of line */}
-                              <div className="w-1 h-1 bg-zinc-800 group-hover:bg-zinc-600 transition-colors rounded-full"></div>
-                           </div>
-                       )}
-                       
-                       <button 
-                         onClick={() => handleMissionClick(mission)}
-                         className={`relative w-48 h-32 md:w-64 md:h-40 border-2 transition-all duration-300 flex flex-col justify-between p-4 group-hover:-translate-y-2
-                            ${selectedMission?.id === mission.id 
-                                ? 'bg-zinc-800 border-ark-yellow shadow-[0_0_20px_rgba(252,211,33,0.2)]' 
-                                : 'bg-black/60 border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900'}`}
-                       >
-                           <div className="flex justify-between items-start">
-                               <span className={`font-mono text-2xl font-black italic ${selectedMission?.id === mission.id ? 'text-ark-yellow' : 'text-zinc-600'}`}>
-                                   {mission.code}
-                               </span>
-                               {mission.locked && <Lock className="w-4 h-4 text-zinc-600" />}
-                           </div>
-                           
-                           <div className="whitespace-normal pointer-events-none">
-                               <div className={`text-sm font-bold leading-tight mb-1 ${selectedMission?.id === mission.id ? 'text-white' : 'text-zinc-400'}`}>
-                                   {mission.title}
-                               </div>
-                               <div className="text-[10px] text-zinc-600 leading-tight">
-                                   {mission.subtitle}
-                               </div>
-                           </div>
-                           
-                           {/* Decorative Corner */}
-                           <div className={`absolute bottom-0 right-0 w-0 h-0 border-b-[20px] border-r-[20px] 
-                                ${selectedMission?.id === mission.id ? 'border-b-ark-yellow border-r-ark-yellow' : 'border-b-zinc-700 border-r-zinc-700'} 
-                                border-t-[20px] border-t-transparent border-l-[20px] border-l-transparent opacity-50`}>
-                           </div>
-                       </button>
+               <div style={{ width: `${totalWidth}px`, height: '100%' }} className="relative">
+                   
+                   {/* Background Grid */}
+                   <div className="absolute inset-0 opacity-5" 
+                        style={{
+                            backgroundImage: `linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)`,
+                            backgroundSize: '40px 40px'
+                        }}>
                    </div>
-               ))}
-               
-               {/* End Line */}
-               <div className="h-0.5 bg-zinc-800 w-24 min-w-[6rem] border-r-2 border-zinc-800 h-4 mt-[-6px] relative">
-                  <ChevronRight className="absolute -right-3 -top-3 text-zinc-800 w-4 h-4" />
+
+                   {/* SVG Connection Layer */}
+                   <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                        {missions.map((mission, idx) => {
+                            if (idx === missions.length - 1) return null;
+                            const start = getMissionPosition(idx);
+                            const end = getMissionPosition(idx + 1);
+                            
+                            // Calculate center points of the cards
+                            const startX = start.x + CARD_WIDTH / 2;
+                            const startY = start.y + CARD_HEIGHT / 2;
+                            const endX = end.x + CARD_WIDTH / 2;
+                            const endY = end.y + CARD_HEIGHT / 2;
+
+                            return (
+                                <g key={`line-${mission.id}`}>
+                                    {/* Connection Line */}
+                                    <line 
+                                        x1={startX} y1={startY} 
+                                        x2={endX} y2={endY} 
+                                        stroke="#333" 
+                                        strokeWidth="2" 
+                                        strokeDasharray="5,5"
+                                    />
+                                    {/* Animated Blip on line */}
+                                    <circle r="3" fill="#FCD321">
+                                        <animateMotion 
+                                            dur="3s" 
+                                            repeatCount="indefinite"
+                                            path={`M${startX},${startY} L${endX},${endY}`}
+                                        />
+                                    </circle>
+                                </g>
+                            );
+                        })}
+                   </svg>
+
+                   {/* Node Render Loop */}
+                   {missions.map((mission, idx) => {
+                       const pos = getMissionPosition(idx);
+                       const isSelected = selectedMission?.id === mission.id;
+                       
+                       return (
+                           <div 
+                                key={mission.id}
+                                style={{
+                                    position: 'absolute',
+                                    left: `${pos.x}px`,
+                                    top: `${pos.y}px`,
+                                    width: `${CARD_WIDTH}px`,
+                                    height: `${CARD_HEIGHT}px`
+                                }}
+                                className="group"
+                           >
+                                {/* The Card Button */}
+                                <button 
+                                    onClick={() => handleMissionClick(mission)}
+                                    className={`w-full h-full relative border-2 transition-all duration-300 flex flex-col justify-between p-4
+                                        ${isSelected 
+                                            ? 'bg-zinc-800 border-ark-yellow shadow-[0_0_30px_rgba(252,211,33,0.3)] scale-105 z-20' 
+                                            : 'bg-black/80 border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900 z-10'}`}
+                                >
+                                    <div className="flex justify-between items-start">
+                                        <span className={`font-mono text-2xl font-black italic ${isSelected ? 'text-ark-yellow' : 'text-zinc-600'}`}>
+                                            {mission.code}
+                                        </span>
+                                        {mission.locked && <Lock className="w-4 h-4 text-zinc-600" />}
+                                    </div>
+                                    
+                                    <div className="whitespace-normal pointer-events-none text-left">
+                                        <div className={`text-sm font-bold leading-tight mb-1 ${isSelected ? 'text-white' : 'text-zinc-400'}`}>
+                                            {mission.title}
+                                        </div>
+                                        <div className="text-[10px] text-zinc-600 leading-tight">
+                                            {mission.subtitle}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Tech decoration corner */}
+                                    <div className={`absolute bottom-0 right-0 w-0 h-0 border-b-[20px] border-r-[20px] 
+                                            ${isSelected ? 'border-b-ark-yellow border-r-ark-yellow' : 'border-b-zinc-700 border-r-zinc-700'} 
+                                            border-t-[20px] border-t-transparent border-l-[20px] border-l-transparent opacity-50`}>
+                                    </div>
+
+                                    {/* Connecting Dot Node (Visual anchor for lines) */}
+                                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-zinc-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                </button>
+                                
+                                {/* Node Index Number floating near it */}
+                                <div className="absolute -top-6 left-0 font-mono text-xs text-zinc-600">
+                                    NODE_0{idx + 1}
+                                </div>
+                           </div>
+                       );
+                   })}
+                   
+                   {/* Start Marker */}
+                   <div className="absolute top-[250px] left-8 flex items-center gap-2">
+                        <div className="w-3 h-3 bg-ark-accent rounded-full animate-pulse"></div>
+                        <span className="text-xs font-mono text-ark-accent tracking-widest">START</span>
+                   </div>
                </div>
           </div>
       </div>
